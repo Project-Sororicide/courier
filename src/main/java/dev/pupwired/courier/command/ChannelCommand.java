@@ -2,7 +2,11 @@ package dev.pupwired.courier.command;
 
 import dev.pupwired.courier.channel.Channel;
 import dev.pupwired.courier.channel.PlayerChannels;
+import dev.pupwired.courier.chat.CharacterNames;
+import dev.pupwired.courier.chat.ChatDispatcher;
+import dev.pupwired.courier.chat.ChatFormatter;
 import dev.pupwired.courier.message.Message;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,18 +16,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * /<label>, where the label is a channel id or radius. Several channels can share a label (equal radii): the
- * ones the player may write to are used; none is a no-access message, more than one is a collision error.
+ * /<label>, where the label is a channel id or radius. Alone, it makes that channel the player's active one;
+ * followed by text, it sends that text on the channel once and leaves the active channel alone. Several
+ * channels can share a label (equal radii): the ones the player may write to are used; none is a no-access
+ * message, more than one is a collision error.
  */
 final class ChannelCommand extends Command {
 
     private final List<Channel> candidates;
     private final PlayerChannels players;
+    private final ChatDispatcher dispatcher;
 
-    ChannelCommand(String label, List<Channel> candidates, PlayerChannels players) {
-        super(label, "Speak in a chat channel", "/" + label, List.of());
+    ChannelCommand(String label, List<Channel> candidates, PlayerChannels players, ChatDispatcher dispatcher) {
+        super(label, "Speak in a chat channel", "/" + label + " [message]", List.of());
         this.candidates = List.copyOf(candidates);
         this.players = players;
+        this.dispatcher = dispatcher;
     }
 
     @Override
@@ -45,7 +53,15 @@ final class ChannelCommand extends Command {
                     usable.stream().map(Channel::name).collect(Collectors.joining(", ")));
             return true;
         }
-        Channel channel = usable.get(0);
+        Channel channel = usable.getFirst();
+
+        String text = String.join(" ", args).strip();
+        if (!text.isEmpty()) {
+            Component line = ChatFormatter.format(channel, CharacterNames.of(player), Component.text(text));
+            dispatcher.deliver(channel, player.getLocation(), line, player);
+            return true;
+        }
+
         if (players.get(player).equals(channel)) {
             Message.CHANNEL_ALREADY.sendMessage(player, channel.name());
             return true;

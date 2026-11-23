@@ -24,11 +24,11 @@ public class CourierPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
+        ChatDispatcher dispatcher = new ChatDispatcher();
         channels = new ChannelRegistry();
         permissions = new ChannelPermissions(getServer().getPluginManager());
         playerChannels = new PlayerChannels(this, channels);
-        channelCommands = new ChannelCommands(this, playerChannels);
-        ChatDispatcher dispatcher = new ChatDispatcher();
+        channelCommands = new ChannelCommands(this, playerChannels, dispatcher);
 
         getServer().getPluginManager().registerEvents(new ChatListener(this, playerChannels, dispatcher), this);
         getServer().getServicesManager().register(Courier.class, new CourierService(channels, dispatcher), this, ServicePriority.Normal);
