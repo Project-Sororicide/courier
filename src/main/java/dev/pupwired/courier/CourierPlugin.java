@@ -15,11 +15,12 @@ public class CourierPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         channels = new ChannelRegistry();
-        playerChannels = new PlayerChannels(channels.defaultChannel());
+        playerChannels = new PlayerChannels(this, channels);
         channelCommands = new ChannelCommands(this, playerChannels);
 
         getServer().getPluginManager().registerEvents(new ChatListener(playerChannels), this);
         channelCommands.register(channels.all());
+        playerChannels.loadOnline();
     }
 
     @Override

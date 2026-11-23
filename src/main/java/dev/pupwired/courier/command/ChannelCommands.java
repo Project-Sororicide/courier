@@ -7,9 +7,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-/** Registers one command per channel at runtime, so channels do not need to be listed in plugin.yml. */
+/** Registers one command per label at runtime, so channels do not need to be listed in plugin.yml. */
 public final class ChannelCommands {
 
     private final JavaPlugin plugin;
@@ -24,15 +27,22 @@ public final class ChannelCommands {
     /** Replaces whatever was registered before, so it is safe to call again after a config reload. */
     public void register(Collection<Channel> channels) {
         unregister();
-        CommandMap map = plugin.getServer().getCommandMap();
+
+        Map<String, List<Channel>> byLabel = new LinkedHashMap<>();
         for (Channel channel : channels) {
-            ChannelCommand command = new ChannelCommand(channel, players);
-            map.register(plugin.getName().toLowerCase(), command);
-            // register() yields to an existing command with the same label (like vanilla /say); take the bare labels over
-            map.getKnownCommands().put(command.getName(), command);
-            for (String alias : command.getAliases()) map.getKnownCommands().put(alias, command);
-            registered.add(command);
+            for (String label : channel.commandLabels()) {
+                byLabel.computeIfAbsent(label.toLowerCase(Locale.ROOT), k -> new ArrayList<>()).add(channel);
+            }
         }
+
+        CommandMap map = plugin.getServer().getCommandMap();
+        byLabel.forEach((label, candidates) -> {
+            ChannelCommand command = new ChannelCommand(label, candidates, players);
+            map.register(plugin.getName().toLowerCase(Locale.ROOT), command);
+            // register() yields to an existing command with the same label (like vanilla /say); take the bare label over
+            map.getKnownCommands().put(label, command);
+            registered.add(command);
+        });
     }
 
     public void unregister() {

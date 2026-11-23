@@ -7,3 +7,15 @@ description: Localized, channel-based roleplay chat.
 depend:
   - LuckPerms
   - LuckyLib
+
+permissions:
+  courier.channel.global.read: { default: true }
+  courier.channel.global.write: { default: true }
+  courier.channel.yell.read: { default: true }
+  courier.channel.yell.write: { default: true }
+  courier.channel.say.read: { default: true }
+  courier.channel.say.write: { default: true }
+  courier.channel.mumble.read: { default: true }
+  courier.channel.mumble.write: { default: true }
+  courier.channel.whisper.read: { default: true }
+  courier.channel.whisper.write: { default: true }
