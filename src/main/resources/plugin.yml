@@ -8,14 +8,13 @@ depend:
   - LuckPerms
   - LuckyLib
 
+commands:
+  courier:
+    description: Courier admin command
+    usage: /courier reload
+    permission: courier.admin
+
 permissions:
-  courier.channel.global.read: { default: true }
-  courier.channel.global.write: { default: true }
-  courier.channel.yell.read: { default: true }
-  courier.channel.yell.write: { default: true }
-  courier.channel.say.read: { default: true }
-  courier.channel.say.write: { default: true }
-  courier.channel.mumble.read: { default: true }
-  courier.channel.mumble.write: { default: true }
-  courier.channel.whisper.read: { default: true }
-  courier.channel.whisper.write: { default: true }
+  courier.admin:
+    description: Courier admin permission
+    default: op

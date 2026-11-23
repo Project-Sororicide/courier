@@ -1,0 +1,36 @@
+# Channel players start in, and fall back to.
+default-channel: global
+
+# One entry per channel. The key is the channel id; players switch to it with /<id> or /<radius>.
+#   name:              display name used in messages
+#   acronym:           shown in chat as [<acronym>]              (default: first letter of the id)
+#   radius:            blocks the message reaches; leave it out for a channel everyone hears
+#   color:             a color name (gold, dark_gray...) or hex like '#fffeb3'   (default: white)
+#   read-permission:   (default: courier.channel.<id>.read)
+#   write-permission:  (default: courier.channel.<id>.write)
+# Every permission is registered as denied to everyone by default; allow it with LuckPerms.
+channels:
+  global:
+    name: Global
+    acronym: G
+    color: aqua
+  yell:
+    name: Yell
+    acronym: Y
+    radius: 50
+    color: red
+  say:
+    name: Say
+    acronym: S
+    radius: 30
+    color: white
+  mumble:
+    name: Mumble
+    acronym: M
+    radius: 15
+    color: gray
+  whisper:
+    name: Whisper
+    acronym: W
+    radius: 5
+    color: dark_gray

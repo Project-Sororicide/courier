@@ -10,6 +10,8 @@ public enum Message implements LuckyMessage {
     CHANNEL_ALREADY("You are already speaking in %s.", Color.WARNING),
     CHANNEL_NO_ACCESS("You can't speak in any channel called '%s'.", Color.WARNING),
     CHANNEL_WRITE_DENIED("You can't speak in %s right now.", Color.WARNING),
+    COMMAND_USAGE("Usage: /%s reload", Color.WARNING),
+    COMMAND_RELOADED("Courier reloaded (%s channel(s)).", Color.PASS),
     CHANNEL_RADIUS_COLLISION("'%s' matches several channels you can use (%s). Use a channel's name instead, " +
             "and let staff know about the clash.", Color.ERROR);
 
