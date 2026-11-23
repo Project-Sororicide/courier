@@ -1,0 +1,8 @@
+name: ${project.name}
+version: ${project.version}
+main: dev.pupwired.courier.CourierPlugin
+api-version: '26.3'
+description: Localized, channel-based roleplay chat.
+
+depend:
+  - LuckPerms
