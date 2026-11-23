@@ -6,3 +6,4 @@ description: Localized, channel-based roleplay chat.
 
 depend:
   - LuckPerms
+  - LuckyLib
