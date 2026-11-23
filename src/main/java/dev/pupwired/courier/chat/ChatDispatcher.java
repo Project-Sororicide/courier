@@ -47,16 +47,16 @@ public final class ChatDispatcher {
      * @return how many players received it
      */
     public int deliver(Location origin, double radius, @Nullable String readPermission,
-                       Component line, @Nullable Player sender) {
+                       Component line, @Nullable Player sender, boolean log) {
         Set<Player> heard = listeners(origin, radius, readPermission);
         if (sender != null) heard.add(sender);
 
-        Bukkit.getConsoleSender().sendMessage(line);
+        if (log) Bukkit.getConsoleSender().sendMessage(line);
         for (Player player : heard) player.sendMessage(line);
         return heard.size();
     }
 
     public int deliver(Channel channel, Location origin, Component line, @Nullable Player sender) {
-        return deliver(origin, channel.radius(), channel.readPermission(), line, sender);
+        return deliver(origin, channel.radius(), channel.readPermission(), line, sender, true);
     }
 }

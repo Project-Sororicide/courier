@@ -28,6 +28,7 @@ public final class LocalMessage {
     private TextColor color = NamedTextColor.WHITE;
     private @Nullable Component speaker;
     private @Nullable String readPermission;
+    private boolean logToConsole = true;
 
     LocalMessage(ChannelRegistry channels, ChatDispatcher dispatcher, Location origin, @Nullable Player sender) {
         this.channels = channels;
@@ -89,6 +90,12 @@ public final class LocalMessage {
         return this;
     }
 
+    /** Whether the line is also printed to the console (default true). Turn off for ambient, high-volume lines. */
+    public LocalMessage logToConsole(boolean log) {
+        this.logToConsole = log;
+        return this;
+    }
+
     /** Sends with the default format: {@code [acronym] speaker: message}. @return how many players heard it */
     public int send(Component message) {
         return sendRaw(ChatFormatter.format(acronym, color, speaker, message));
@@ -104,6 +111,6 @@ public final class LocalMessage {
             throw new IllegalStateException("Courier messages must be sent from the main thread");
         if (radius == null)
             throw new IllegalStateException("Choose who hears this first: channel(id), radius(blocks) or global()");
-        return dispatcher.deliver(origin, radius, readPermission, line, sender);
+        return dispatcher.deliver(origin, radius, readPermission, line, sender, logToConsole);
     }
 }
