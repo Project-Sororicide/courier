@@ -1,11 +1,25 @@
 package dev.pupwired.courier.channel;
 
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 
-/** A chat channel. Radius, permissions and config loading are added in the next steps. */
-public record Channel(String id, String acronym, TextColor color) {
+import java.util.List;
+import java.util.Locale;
 
-    /** Placeholder until channels are loaded from config. */
-    public static final Channel GLOBAL = new Channel("global", "G", NamedTextColor.GRAY);
+/** A chat channel. A radius of {@link #UNLIMITED} means everyone hears it. */
+public record Channel(String id, String name, String acronym, int radius, TextColor color) {
+
+    public static final int UNLIMITED = -1;
+
+    public Channel {
+        id = id.toLowerCase(Locale.ROOT);
+    }
+
+    public boolean isGlobal() {
+        return radius == UNLIMITED;
+    }
+
+    /** Extra command labels besides the id: the radius, for channels that have one. */
+    public List<String> commandAliases() {
+        return isGlobal() ? List.of() : List.of(String.valueOf(radius));
+    }
 }
